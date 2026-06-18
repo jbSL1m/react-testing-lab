@@ -93,3 +93,13 @@ Before we begin coding, let's complete the initial setup for this lesson:
 - The application tests if a new transaction can be added.
 - The application tests if search functionality updates the page correctly.
 
+## Completed Work
+- Added application search filtering and sort ordering in `src/components/AccountContainer.jsx`.
+- Implemented Vitest test suites for display, add, search, and sort behaviors.
+- Verified transaction display on load and that new transactions send a POST request.
+- Search input updates the rendered transaction list immediately.
+
+## Run Tests
+- Install dependencies with `npm install`
+- Run the test suite with `npm test`
+
