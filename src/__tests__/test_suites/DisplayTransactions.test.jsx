@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import App from "../../components/App";
 
+// Mock transaction data used to verify the app displays transaction rows.
 const transactions = [
   {
     id: "1",
@@ -19,10 +20,12 @@ const transactions = [
 ];
 
 it("displays transactions on load", async () => {
+  // Provide the mocked backend response before rendering the app.
   setFetchResponse(transactions);
 
   render(<App />);
 
+  // Confirm the transaction descriptions appear in the DOM.
   expect(await screen.findByText("Paycheck from Bob's Burgers")).toBeInTheDocument();
   expect(await screen.findByText("Lyft Ride")).toBeInTheDocument();
 });

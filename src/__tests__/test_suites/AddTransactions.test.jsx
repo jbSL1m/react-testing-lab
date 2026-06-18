@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import App from "../../components/App";
 
 it("adds a new transaction and calls POST", async () => {
+  // The app should initially render this transaction from the mock backend.
   const initialTransactions = [
     {
       id: "1",
@@ -13,6 +14,7 @@ it("adds a new transaction and calls POST", async () => {
     },
   ];
 
+  // Transaction object representing the form submission payload.
   const newTransaction = {
     id: "2",
     date: "2019-12-10",
@@ -21,6 +23,7 @@ it("adds a new transaction and calls POST", async () => {
     amount: -4.5,
   };
 
+  // Mock the sequence of fetch calls: initial GET, then POST.
   const fetchMock = vi
     .fn()
     .mockResolvedValueOnce({
@@ -38,8 +41,10 @@ it("adds a new transaction and calls POST", async () => {
 
   render(<App />);
 
+  // Verify the app has loaded the initial transaction before filling the form.
   expect(await screen.findByText("Paycheck from Bob's Burgers")).toBeInTheDocument();
 
+  // Fill in the form and submit it.
   await userEvent.type(screen.getByRole("textbox", { name: /description/i }), "Coffee at Flatiron Cafe");
   await userEvent.type(screen.getByRole("textbox", { name: /category/i }), "Food");
   await userEvent.type(screen.getByRole("spinbutton", { name: /amount/i }), "-4.5");
@@ -47,6 +52,7 @@ it("adds a new transaction and calls POST", async () => {
 
   await userEvent.click(screen.getByRole("button", { name: /add transaction/i }));
 
+  // Ensure the app made the expected POST request.
   await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
   expect(fetchMock.mock.calls[1][0]).toBe("http://localhost:6001/transactions");
   expect(fetchMock.mock.calls[1][1].method).toBe("POST");
@@ -59,5 +65,6 @@ it("adds a new transaction and calls POST", async () => {
     amount: "-4.5",
   });
 
+  // Confirm the new transaction was rendered after submission.
   expect(await screen.findByText("Coffee at Flatiron Cafe")).toBeInTheDocument();
 });

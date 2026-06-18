@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../../components/App";
 
+// Mock transactions used to validate search and sort behavior.
 const transactions = [
   {
     id: "1",
@@ -27,6 +28,7 @@ const transactions = [
 ];
 
 it("filters displayed transactions when search input changes", async () => {
+  // Provide the transaction list and render the app.
   setFetchResponse(transactions);
   render(<App />);
 
@@ -35,6 +37,7 @@ it("filters displayed transactions when search input changes", async () => {
   const searchInput = screen.getByPlaceholderText(/Search your Recent Transactions/i);
   await userEvent.type(searchInput, "coffee");
 
+  // Only matching transactions should remain visible after search.
   expect(screen.getByText("Coffee at Flatiron Cafe")).toBeInTheDocument();
   expect(screen.queryByText("Paycheck from Bob's Burgers")).not.toBeInTheDocument();
 });
@@ -48,6 +51,7 @@ it("sorts transactions by category when the sort select changes", async () => {
   const sortSelect = screen.getByRole("combobox");
   await userEvent.selectOptions(sortSelect, "category");
 
+  // Confirm the rendered row order matches category sorting.
   await waitFor(() => {
     const rows = screen.getAllByRole("row");
     expect(rows[1]).toHaveTextContent("Coffee at Flatiron Cafe");
